@@ -1,0 +1,102 @@
+{
+  "name": "@ykey/raven-route",
+  "description": "Router for @ykey/raven",
+  "version": "0.0.0",
+  "author": {
+    "name": "ykeyjp",
+    "email": "ykey.jp@gmail.com",
+    "url": "https://github.com/ykeyjp"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "source": [
+      "lib/**/*.js"
+    ],
+    "powerAssert": false
+  },
+  "browser": "./dist/raven-route.js",
+  "bugs": "https://github.com/ykeyjp/raven-route.js/issues",
+  "devDependencies": {
+    "@types/node": "^8.0.14",
+    "@ykey/raven": "https://github.com/ykeyjp/raven.js.git",
+    "ava": "^0.21.0",
+    "browser-env": "^3.1.0",
+    "npm-run-all": "^4.0.2",
+    "nyc": "^11.0.3",
+    "prettier": "^1.5.3",
+    "rollup": "^0.45.2",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "uglify-js": "^3.0.25",
+    "xo": "^0.18.2"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "homepage": "https://github.com/ykeyjp/raven-route.js",
+  "keywords": [
+    "components",
+    "raven",
+    "ui",
+    "web"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ykeyjp/raven-route.js.git"
+  },
+  "scripts": {
+    "bundle": "node bundle.js",
+    "cover": "nyc ava",
+    "cover:report": "nyc report --reporter=html",
+    "format": "prettier --write --single-quote --semi=true --trailing-comma es5 --no-bracket-spacing {lib,test}/**/*.js",
+    "lint": "xo {lib,test}/**/*.js",
+    "report": "run-s cover cover:report",
+    "test": "ava"
+  },
+  "types": "./lib/index.d.js",
+  "xo": {
+    "space": true,
+    "envs": [
+      "browser",
+      "node",
+      "es6"
+    ],
+    "rules": {
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ],
+      "no-new-func": [
+        "off"
+      ],
+      "space-before-function-paren": [
+        2,
+        "never"
+      ],
+      "operator-linebreak": [
+        "error",
+        "after",
+        {
+          "overrides": {
+            "-=": "before",
+            "+=": "before",
+            "?": "before",
+            ":": "before"
+          }
+        }
+      ]
+    }
+  }
+}
