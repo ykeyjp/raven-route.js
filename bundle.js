@@ -3,6 +3,7 @@ const rollup = require('rollup');
 const buble = require('rollup-plugin-buble');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
+const replace = require('rollup-plugin-re');
 const uglify = require('uglify-js');
 const plugins = [
   buble({
@@ -20,9 +21,17 @@ const plugins = [
     jsnext: true,
     main: true,
   }),
-  commonjs({}),
+  replace({
+    patterns: [
+      {
+        test: "require('@ykey/raven');",
+        replace: 'window.raven;',
+      },
+    ],
+  }),
+  commonjs(),
 ];
-const moduleName = 'raven-route';
+const moduleName = 'raven.route';
 const config = {
   entry: 'lib/index.js',
   dest: 'dist/raven-route.js',
@@ -35,22 +44,23 @@ const config = {
 rollup
   .rollup(config)
   .then(bundle => {
-    const result = bundle.generate({
-      format: 'iife',
-      moduleName: config.moduleName,
-      globals: {
-        '@ykey/raven': 'raven',
-      },
-    });
-    const minify = uglify.minify(result.code, {
-      sourceMap: {
-        filename: `${moduleName}.js`,
-        url: `${moduleName}.js.map`,
-      },
-    });
-    !fs.existsSync('dist') && fs.mkdirSync('dist');
-    fs.writeFileSync(`dist/${moduleName}.js`, result.code);
-    fs.writeFileSync(`dist/${moduleName}.min.js`, minify.code);
-    fs.writeFileSync(`dist/${moduleName}.min.js.map`, minify.map);
+    return bundle
+      .generate({
+        format: 'iife',
+        moduleName: config.moduleName,
+        exports: 'default',
+      })
+      .then(result => {
+        const minify = uglify.minify(result.code, {
+          sourceMap: {
+            filename: `${moduleName}.js`,
+            url: `${moduleName}.js.map`,
+          },
+        });
+        !fs.existsSync('dist') && fs.mkdirSync('dist');
+        fs.writeFileSync(`dist/${moduleName}.js`, result.code);
+        fs.writeFileSync(`dist/${moduleName}.min.js`, minify.code);
+        fs.writeFileSync(`dist/${moduleName}.js.map`, minify.map);
+      });
   })
   .catch(err => console.log(err));
