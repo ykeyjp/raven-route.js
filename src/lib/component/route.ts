@@ -1,7 +1,7 @@
-const raven = require('@ykey/raven');
-const Pattern = require('../util/pattern');
+import * as raven from '@ykey/raven';
+import Pattern from '../util/pattern';
 
-class Route {
+export default class Route {
   constructor(options) {
     this.parent = options.parent;
     this.$ = {};
@@ -71,5 +71,3 @@ class Route {
     }
   }
 }
-
-module.exports = Route;

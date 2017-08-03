@@ -3,38 +3,12 @@ const rollup = require('rollup');
 const buble = require('rollup-plugin-buble');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
-const replace = require('rollup-plugin-re');
 const uglify = require('uglify-js');
-const plugins = [
-  buble({
-    target: {
-      chrome: 52,
-      firefox: 48,
-      safari: 9,
-      ie: 11,
-      edge: 12,
-      node: 6,
-    },
-  }),
-  resolve({
-    module: true,
-    jsnext: true,
-    main: true,
-  }),
-  replace({
-    patterns: [
-      {
-        test: "require('@ykey/raven');",
-        replace: 'window.raven;',
-      },
-    ],
-  }),
-  commonjs(),
-];
+const plugins = [resolve(), commonjs(), buble()];
 const moduleName = 'raven.route';
 const config = {
-  entry: 'lib/index.js',
-  dest: 'dist/raven-route.js',
+  entry: 'es6/index.js',
+  dest: 'dist/raven.route.js',
   format: 'iife',
   moduleName: moduleName,
   context: 'window',
@@ -48,7 +22,6 @@ rollup
       .generate({
         format: 'iife',
         moduleName: config.moduleName,
-        exports: 'default',
       })
       .then(result => {
         const minify = uglify.minify(result.code, {

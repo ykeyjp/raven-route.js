@@ -1,20 +1,16 @@
-# @ykey/raven-route
+# @ykey/raven.route
 
-**raven-route** is Router for @ykey/raven.
+**raven.route** is Router for @ykey/raven.
 
 ## Requirement
 
 ## Installation
 
-- package.json
-```json
-{
-  "dependencies": {
-    "@ykey/raven-route": "https://github.com/ykeyjp/raven-route.js.git"
-  }
-}
 ```
-and `npm update` or `yarn install`.
+$ npm install @ykey/raven.route
+# or
+$ yarn add @ykey/raven.route
+```
 
 ## Contribution
 

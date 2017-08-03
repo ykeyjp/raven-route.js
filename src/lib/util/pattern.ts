@@ -1,13 +1,20 @@
-class Pattern {
-  /**
-   * @param {string} path
-   */
-  constructor(path) {
+export interface IPatternResult {
+  [key: string]: string | number | boolean | null | undefined | any[];
+  params?: (string | number | boolean | null | undefined)[];
+}
+
+type GeneratorFunc = (url: string) => IPatternResult | false;
+
+export default class Pattern {
+  private path: string;
+  private parser: GeneratorFunc | null;
+
+  constructor(path: string) {
     this.path = path;
     this.parser = createParser(path);
   }
 
-  match(url) {
+  match(url: string): IPatternResult | false {
     if (this.parser) {
       return this.parser(url);
     }
@@ -17,10 +24,8 @@ class Pattern {
     return false;
   }
 }
-/**
- * @param {string} path
- */
-function createParser(path) {
+
+function createParser(path: string): GeneratorFunc | null {
   if (path.indexOf(':') !== -1) {
     return withParams(path);
   }
@@ -30,19 +35,13 @@ function createParser(path) {
   return null;
 }
 
-/**
- * @param {string} path
- */
-function endAny(path) {
+function endAny(path: string): GeneratorFunc {
   path = path.slice(0, path.length - 3);
   const re = new RegExp('^' + path + '(.*)$', '');
   return generateWildcardParser(re);
 }
 
-/**
- * @param {RegExp} re
- */
-function generateWildcardParser(re) {
+function generateWildcardParser(re: RegExp): GeneratorFunc {
   return function(url) {
     const match = re.exec(url);
     if (match) {
@@ -52,11 +51,8 @@ function generateWildcardParser(re) {
   };
 }
 
-/**
- * @param {string} path
- */
-function withParams(path) {
-  const named = [];
+function withParams(path: string): GeneratorFunc {
+  const named: string[] = [];
   const parts = path.split('/').map(part => {
     if (part.startsWith(':')) {
       named.push(part.slice(1));
@@ -71,15 +67,11 @@ function withParams(path) {
   return generateParamsParser(re, named);
 }
 
-/**
- * @param {RegExp} re
- * @param {string[]} named
- */
-function generateParamsParser(re, named) {
-  return function(url) {
+function generateParamsParser(re: RegExp, named: string[]): GeneratorFunc {
+  return function(url: string) {
     const match = re.exec(url);
     if (match) {
-      const params = {};
+      const params: IPatternResult = {};
       named.forEach((name, i) => {
         if (name === '...') {
           if (match[i + 1].length === 0) {
@@ -97,11 +89,7 @@ function generateParamsParser(re, named) {
   };
 }
 
-/**
- * @param {string} val
- * @return {string|number|boolean|null|undefined}
- */
-function cast(val) {
+function cast(val: string): string | number | boolean | null | undefined {
   const str = val.toLowerCase();
   if (str === 'true') {
     return true;
@@ -118,5 +106,3 @@ function cast(val) {
   }
   return val;
 }
-
-module.exports = Pattern;

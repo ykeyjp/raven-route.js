@@ -1,5 +1,5 @@
 {
-  "name": "@ykey/raven-route",
+  "name": "@ykey/raven.route",
   "description": "Router for @ykey/raven",
   "version": "0.0.1",
   "author": {
@@ -16,13 +16,11 @@
     ],
     "powerAssert": false
   },
-  "browser": "./dist/raven-route.js",
-  "bugs": "https://github.com/ykeyjp/raven-route.js/issues",
-  "dependencies": {
-    "@ykey/raven": "https://github.com/ykeyjp/raven.js.git"
-  },
+  "browser": "./dist/raven.route.js",
+  "bugs": "https://github.com/ykeyjp/raven.route.js/issues",
   "devDependencies": {
-    "@types/node": "^8.0.14",
+    "@types/node": "^8.0.16",
+    "@ykey/raven": "^0.1.0",
     "ava": "^0.21.0",
     "browser-env": "^3.1.0",
     "npm-run-all": "^4.0.2",
@@ -32,74 +30,54 @@
     "rollup-plugin-buble": "^0.15.0",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-re": "^1.0.6",
-    "uglify-js": "^3.0.25",
-    "xo": "^0.18.2"
+    "tslint": "^5.5.0",
+    "typedoc": "^0.8.0",
+    "typescript": "^2.4.2",
+    "uglify-js": "^3.0.26"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=7.6"
   },
-  "homepage": "https://github.com/ykeyjp/raven-route.js",
+  "files": [
+    "package.json",
+    "README.md",
+    "lib",
+    "dist",
+    "doc"
+  ],
+  "homepage": "https://github.com/ykeyjp/raven.route.js",
   "keywords": [
     "components",
     "raven",
-    "ui",
-    "web"
+    "router"
   ],
   "license": "MIT",
   "main": "lib/index.js",
+  "module": "es6/index.js",
+  "peerDependencies": {
+    "@ykey/raven": "^0.1.0"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ykeyjp/raven-route.js.git"
+    "url": "https://github.com/ykeyjp/raven.route.js.git"
   },
   "scripts": {
-    "bundle": "node bundle.js",
-    "cover": "nyc ava",
-    "cover:report": "nyc report --reporter=html",
-    "format": "prettier --write --single-quote --semi=true --trailing-comma es5 --no-bracket-spacing {lib,test}/**/*.js",
-    "lint": "xo {lib,test}/**/*.js",
-    "report": "run-s cover cover:report",
-    "test": "ava"
+    "build": "run-p build:es5 build:es6 build:bundle",
+    "build:bundle": "node bundle.js",
+    "build:es5": "node ./node_modules/typescript/bin/tsc -p tsconfig.es5.json",
+    "build:es6": "node ./node_modules/typescript/bin/tsc -p tsconfig.json",
+    "doc": "typedoc --out doc --mode modules",
+    "format": "prettier --write --print-width 120 --single-quote --semi=true --trailing-comma es5 --no-bracket-spacing src/{lib,test}/**/*.ts",
+    "lint": "tslint src/**/*.ts",
+    "report": "run-s test:build report:cover report:html",
+    "report:cover": "nyc ava",
+    "report:html": "nyc report --reporter=html",
+    "test": "run-s test:build test:run",
+    "test:build": "node ./node_modules/typescript/bin/tsc -p tsconfig.test.json",
+    "test:build:watch": "node ./node_modules/typescript/bin/tsc -p tsconfig.test.json -w",
+    "test:run": "ava",
+    "test:run:watch": "ava -w",
+    "test:watch": "run-p test:build:watch test:run:watch"
   },
-  "types": "./lib/index.d.js",
-  "xo": {
-    "space": true,
-    "envs": [
-      "browser",
-      "node",
-      "es6"
-    ],
-    "rules": {
-      "quotes": [
-        "error",
-        "single",
-        {
-          "avoidEscape": true
-        }
-      ],
-      "comma-dangle": [
-        "error",
-        "always-multiline"
-      ],
-      "no-new-func": [
-        "off"
-      ],
-      "space-before-function-paren": [
-        2,
-        "never"
-      ],
-      "operator-linebreak": [
-        "error",
-        "after",
-        {
-          "overrides": {
-            "-=": "before",
-            "+=": "before",
-            "?": "before",
-            ":": "before"
-          }
-        }
-      ]
-    }
-  }
+  "types": "./lib/index.d.js"
 }
